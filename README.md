@@ -37,9 +37,7 @@ path_maker 노드를 실행시켜 주어진 경로 폴더에서 파일로 저장
 MORAI에서 정의한 메시지 유형을 포함한 패키지 morai_msgs에서 GetTrafficLightStatus 메시지를 불러왔다. 
 
 GetTrafficLightStatus 메시지는 실시간으로 전송되는 MORAI SIM에서의 신호등 상태 정보를 포함하고 있다. 
-```
 
-```
 #### 로터리 미션
 
 #### 동적 장애물 미션
