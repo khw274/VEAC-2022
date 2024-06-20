@@ -25,10 +25,10 @@ PYTHON, MORAI SIM, ROS1 noetic, UBUNTU 20.04, RVIZ, WSL
 ### 경로 설정
 MORAI SIM 수동모드로 설정
 
-path_maker 노드를 실행시켜 주어진 경로 폴더에서 파일로 저장할 차량의 위치 정보를 받아옴
-일정 거리 이상 이동할 때마다 위치를 기록하고 파일에 작성.
+path_maker 노드를 실행시켜 주어진 경로 폴더에서 파일로 저장할 차량의 위치 정보를 받아옴  
+수동으로 일정 거리 이상 이동할 때마다 위치를 기록하고 파일에 작성, 세밀하게 조작해 최대한 깔끔한 경로를 추출함
 
-![image](https://github.com/khw274/VEAC-2022/assets/125671828/019d9230-e1f3-47a6-8ae0-34f3928cc3e9)
+![image](https://github.com/khw274/VEAC-2022/assets/125671828/019d9230-e1f3-47a6-8ae0-34f3928cc3e9)  
 
 ### 미션 코드 설계
 #### 신호등 정차 미션
