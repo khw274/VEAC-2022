@@ -22,9 +22,24 @@ PYTHON, MORAI SIM, ROS1 noetic, UBUNTU 20.04, RVIZ, WSL
 ● 노트북 용량 문제와 편하게 윈도우와 사용하기 위해 WSL에 UBUNTU 20.04 환경을 구축함  
 ● 기본적으로 UBUNTU 20.04와 호환되는 ROS1 Noetic 버전을 설치함
 
+### 경로 설정
+MORAI SIM 수동모드로 설정
+
+path_maker 노드를 실행시켜 주어진 경로 폴더에서 파일로 저장할 차량의 위치 정보를 받아옴
+일정 거리 이상 이동할 때마다 위치를 기록하고 파일에 작성.
+
+![image](https://github.com/khw274/VEAC-2022/assets/125671828/019d9230-e1f3-47a6-8ae0-34f3928cc3e9)
+
 ### 미션 코드 설계
 #### 신호등 정차 미션
-MORAI SIM과 ROS를 에서 
+신호등 미션에서는 카메라를 사용하지 않는 방법을 채택했다.
+
+MORAI에서 정의한 메시지 유형을 포함한 패키지 morai_msgs에서 GetTrafficLightStatus 메시지를 불러왔다. 
+
+GetTrafficLightStatus 메시지는 실시간으로 전송되는 MORAI SIM에서의 신호등 상태 정보를 포함하고 있다. 
+```
+
+```
 #### 로터리 미션
 
 #### 동적 장애물 미션
