@@ -30,7 +30,12 @@ path_maker 노드를 실행시켜 주어진 경로 폴더에서 파일로 저장
 
 ![image](https://github.com/khw274/VEAC-2022/assets/125671828/019d9230-e1f3-47a6-8ae0-34f3928cc3e9)  
 
+더 정확한 경로 추종을 위해 Pure Pursuit 변수값 조정 > 다음에 분석
+
 ### 미션 코드 설계
+#### 속도 조정 방법
+
+
 #### 신호등 정차 미션
 신호등 미션에서는 카메라를 사용하지 않는 방법을 채택했다.
 
@@ -38,6 +43,11 @@ MORAI에서 정의한 메시지 유형을 포함한 패키지 morai_msgs에서 G
 
 GetTrafficLightStatus 메시지는 실시간으로 전송되는 MORAI SIM에서의 신호등 상태 정보를 포함하고 있다. 
 
+- /GetTrafficLightStatus, /current_waypoint 토픽을 subscribe 하여 신호등 상태와 현재 차량의 waypoint 정보를 받아옴
+- 변수에 신호등 상태에 따른 output 값 저장(파란불일 시 '16' 값이 나오는 것을 확인)
+- MORAI SIM에서 신호등 구간을 임의로 정해 waypoint 정보 저장(측정 결과 171~172 신호등 웨이포인트), rosrun echo 명령어를 통해 /current_waypoint 토픽에서 발행된 메시지를 확인하여 측정함 
+- 신호등 상태에 따른 if문 작성, 파란불이 아닐 시 속도를 0으로 지정함
+- 설정한 속도를 변수에 저장하고 Publisher을 통해 메인 노드가 구독할 수 있도록 메시지 송신
 #### 로터리 미션
 
 #### 동적 장애물 미션
