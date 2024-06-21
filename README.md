@@ -45,8 +45,22 @@ wecar planner(메인 노드)에서 계획한 현재 속도, 각 미션을 수행
   특정 속도로 주행하고 싶을 땐 나머지 속도 값을 999로 초기화하고 특정 속도를 그보다 작은 값으로 설정해 min_vel(가장 작은 속도 값)을 불러와 속도를 조정하였다.
 
 이렇게 적합한 속도를 저장하는 min_vel을 차량 모터의 RPM으로 변환하여 motor_msg에 저장하는 과정을 걸쳐 차량의 속도를 최종적으로 제어할 수 있었다.  
-```self.motor_msg = min_vel * self.rpm_gain / 3.6```
 
+```python
+ # 속도 Filtering
+spd_list = []
+spd_list.append(self.cc_vel) # wecar planner 계획한 현재 속도
+spd_list.append(self.traffic_vel)
+spd_list.append(self.dynamic_vel)
+spd_list.append(self.rotary_vel)
+spd_list.append(self.stop_vel)
+
+
+# 속도 리스트 중에서 "최솟값"
+min_vel = min(spd_list)
+
+self.motor_msg = min_vel * self.rpm_gain / 3.6
+```
 #### (신호등 정차 미션)
 신호등 미션에서는 카메라를 사용하지 않는 방법을 채택했다.
 
