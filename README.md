@@ -73,7 +73,7 @@ GetTrafficLightStatus 메시지는 실시간으로 전송되는 MORAI SIM에서�
 - MORAI SIM에서 신호등 구간을 임의로 정해 waypoint 정보 저장(측정 결과 171~172 신호등 웨이포인트), rosrun echo 명령어를 통해 /current_waypoint 토픽에서 발행된 메시지를 확인하여 측정함 
 - 신호등 상태에 따른 if문 작성, 파란불이 아닐 시 속도를 0으로 지정함
 - 설정한 속도를 변수에 저장하고 Publisher을 통해 메인 노드가 Subscribe할 수 있도록 메시지 송신
-<img src="https://github.com/khw274/VEAC-2022/assets/125671828/90d58a0f-d136-4eae-850a-995858a92341" width="700" height="400"/>
+<img src="https://github.com/khw274/VEAC-2022/assets/125671828/04e64cbd-8868-4754-9ff5-4edcdd511c7a" width="800" height="500"/>  
 
 #### (로터리 미션)
 ##### WAYPOINT 지정
@@ -168,6 +168,8 @@ for i in obstacle_list:
 
 self.vel_pub.publish(self.rotary_vel)
 ```
+<img src="https://github.com/khw274/VEAC-2022/assets/125671828/36754dd6-949d-4f82-ada4-e5e65c5d744f" width="800" height="500"/>  
+
 #### (동적 장애물 미션)
 
 #### (정적 장애물 미션)
