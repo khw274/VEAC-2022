@@ -224,7 +224,7 @@ if self.tic_tok >= 30:
 self.obj_width = self.get_dst(curr_left, curr_right)  //  curr_left와 curr_right는 주변에 감지된 두 개의 장애물의 위치
 ```
 
-만약 0.7 미만이라면 정적 장애물로 인지하고 정적 장애물 회피 알고리즘을 실행한다. 여기서 회피 여부를 결정하기 위해 정지해있을 때의 정적 장애물 좌표를 저장해둔다.
+만약 0.7 미만이라면 정적 장애물로 인지하고 정적 장애물 회피 알고리즘을 실행한다. 여기서 회피 여부를 결정하기 위해 정지해있을 때의 정적 장애물 좌표를 저장해둔다.  
 속도를 낮추어 서행하면서 초기 선택된 차선 1(기본 주행 차선, 오른쪽 차선)에서 차선 0(회피 차선, 왼쪽 차선)으로 변경해 정적 장애물을 회피한다.
 ```python
     else:
@@ -232,7 +232,7 @@ self.obj_width = self.get_dst(curr_left, curr_right)  //  curr_left와 curr_righ
         self.static_mission = True
         self.static_obj_mean = self.get_mean(local_obstacle_list)  # 회피 여부를 결정하기 위해 정지해있을때의 장애물 위치 기억
 ```
-하지만 회피한 차선에도 정적 장애물이 존재할 수 있다. 따라서 최대한 빠르게 원래 주행 차선으로 복귀할 수 있어야 한다.
+하지만 회피한 차선에도 정적 장애물이 존재할 수 있다. 따라서 최대한 빠르게 원래 주행 차선으로 복귀할 수 있어야 한다.  
 따라서 차량의 현재 좌표와 앞서 저장해둔 기억한 장애물 좌표의 거리가 멀어진다면 정적 미션을 종료시켜 차선을 복귀시킨다. 
 ```python
 elif self.static_mission:
