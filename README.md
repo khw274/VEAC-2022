@@ -204,7 +204,19 @@ self.vel_pub.publish(self.rotary_vel)
 동적 장애물은 서행, 정적 장애물은 정지하도록 설정했기 때문에 속도가 0 이라면 tic_tok 변수를 1씩 증가시켜 카운트하고 그렇지 않다면 0으로 설정한다.
 
 만약 tic_tok이 30 이상이 될 때까지 정지해있다면 정적 장애물로 판단하도록 했다. (변수를 방지하기 위해 tic_tok을 넉넉하게 잡아주면 좋다, 너무 크게 잡을 시 랩 타임이 증가할 수 있다)
+```python
+# 정적, 동적 구분 -> 동적 장애물이라면 주행 차선에 머물지 않음
+if dynamic_vel == 0:
+    self.tic_tok += 1
+else:
+    self.tic_tok = 0
 
+# 10동안 장애물이 주행 차선에 머물기 때문에 정적 장애물로 판단
+if self.tic_tok >= 30:
+    if self.obj_width > 0.7:  # 정적 장애물 중에서 장애물 간격이 크다면 콘 미션
+        self.cone_mission = True
+        self.static_mission = False
+```
 이제 정적 장애물과 라바콘 장애물을 구분할 차례이다.
 
 장애물의 간격(obj_width)이 0.7 이상이라면 라바콘 미션이라고 인지한다. 이때 장애물 간 간격을 계산하기 위해 다음 변수를 사용했다.  
@@ -214,7 +226,12 @@ self.obj_width = self.get_dst(curr_left, curr_right)  //  curr_left와 curr_righ
 
 만약 0.7 미만이라면 정적 장애물로 인지하고 정적 장애물 회피 알고리즘을 실행한다. 여기서 회피 여부를 결정하기 위해 정지해있을 때의 정적 장애물 좌표를 저장해둔다.
 속도를 낮추어 서행하면서 초기 선택된 차선 1(기본 주행 차선, 오른쪽 차선)에서 차선 0(회피 차선, 왼쪽 차선)으로 변경해 정적 장애물을 회피한다.
-
+```python
+    else:
+        self.cone_mission = False
+        self.static_mission = True
+        self.static_obj_mean = self.get_mean(local_obstacle_list)  # 회피 여부를 결정하기 위해 정지해있을때의 장애물 위치 기억
+```
 하지만 회피한 차선에도 정적 장애물이 존재할 수 있다. 따라서 최대한 빠르게 원래 주행 차선으로 복귀할 수 있어야 한다.
 따라서 차량의 현재 좌표와 앞서 저장해둔 기억한 장애물 좌표의 거리가 멀어진다면 정적 미션을 종료시켜 차선을 복귀시킨다. 
 ```python
