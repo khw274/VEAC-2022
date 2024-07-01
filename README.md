@@ -192,7 +192,38 @@ self.vel_pub.publish(self.rotary_vel)
 #### (정적 장애물 미션)
 차량과 장애물의 거리가 0.15 미만이라면 장애물이 차선에 침입했다고 생각하고 지역 경로 내 장애물 리스트에 장애물 좌표를 저장한다.   
 저장한 장애물 좌표와 차량 간 거리를 측정하고 그 거리가 미리 설정해둔 정지 거리(stop_distance) 1.35 미만이면서 로타리 구간이 아니라면 차량을 정지시킨다.  
+
 -> 여기서 로타리 구간과 구분을 해야 미션 간 속도 충돌이 일어나지 않게 된다.(waypoint로 구분)
+```python
+if self.is_status and self.is_local_path:  # 데이터가 모두 콜백된 상태에서 알고리즘을 실행합니다.
+    if self.cone_mission is False:  # 콘 미션 제어값과 겹치지 않기 위한 조건문
+        # 로컬 파라미터 초기화
+        stop_distance = 1.35  # 정지 거리 설정
+        dynamic_vel = 999  # 초기 동적 속도
+        selected_lane = 1  # 초기 선택된 차선
+        if self.static_mission is False:  # 주행 차선에 장애물이 있다면 장애물 위치를 특정하기 위한 조건문
+            local_obstacle_list = []
+            '''로컬 경로에 장애물이 존재하는지 검사
+            로컬 경로 길이는 속도가 클수록 늘어남'''
+            for i in pcd_list:
+                for j in self.local_path_list:
+                    dst = self.get_dst(i, j)
+                    if dst < 0.15:  # 차선 폭은 대략 0.36m, 주행 차선 중앙 기준 양쪽 0.15m 장애물 여부 확인
+                        local_obstacle_list.append(i)
+                        print('전방에 장애물')
+                    elif dst < 1.25:  # 주행 차선 근처에 장애물이 감지되면 서행 -> 동적 장애물이 주행 차로에 다가올 때를 대비
+                        dynamic_vel = 2.0
+                        print('근처에 장애물')
+
+            for i in local_obstacle_list:  # local_obstacle_list는 차선 위에 존재하는 장애물 포인트
+                dst = self.get_dst(i, self.ego_pos)
+                if dst < stop_distance:  # 주행 차선에 위치한 장애물이 ego 차량과 가깝고 콘 미션이 아니라면 정지
+                    if 215 <= self.current_waypoint <= 236:  # 로타리 구간이라면 dynamic_vel 비활성화
+                        dynamic_vel = 999
+                    else:
+                        dynamic_vel = 0  # 로타리 구간이 아니라면 정지
+                        print('충돌 대비 정지')
+```
 
 헷갈릴 수 있는 부분은 동적 장애물과의 거리 측정 방법 차이인데 다음과 같다.
 - 동적 장애물: 차량의 지역 경로 좌표와 인식된 장애물의 좌표 거리를 측정 
