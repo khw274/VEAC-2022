@@ -194,7 +194,7 @@ self.vel_pub.publish(self.rotary_vel)
 차량과 장애물의 거리가 0.15 미만이라면 장애물이 차선에 침입했다고 생각하고 지역 경로 내 장애물 리스트에 장애물 좌표를 저장한다.   
 저장한 장애물 좌표와 차량 간 거리를 측정하고 그 거리가 미리 설정해둔 정지 거리(stop_distance) 1.35 미만이면서 로타리 구간이 아니라면 차량을 정지시킨다.  
 
--> 여기서 로타리 구간과 구분을 해야 미션 간 속도 충돌이 일어나지 않게 된다.(waypoint로 구분)
+여기서 로타리 구간과 구분을 해야 미션 간 속도 충돌이 일어나지 않게 된다.(waypoint로 구분)
 ```python
 if self.is_status and self.is_local_path:  # 데이터가 모두 콜백된 상태에서 알고리즘을 실행합니다.
     if self.cone_mission is False:  # 콘 미션 제어값과 겹치지 않기 위한 조건문
