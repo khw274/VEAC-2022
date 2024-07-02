@@ -1,4 +1,4 @@
-# 2022년 동계 혁신공유대학 가상환경 기반 자율주행 경진대회
+![image](https://github.com/khw274/VEAC-2022/assets/125671828/28196eb0-71d0-4b1d-9359-424b0cbf8e5d)# 2022년 동계 혁신공유대학 가상환경 기반 자율주행 경진대회
 
 ● 가상환경(MORAI 시뮬레이션)에서 도로주행, 장애물 및 신호등 인식 자율주행 미션 수행  
 ● ROS 환경에서 자율주행 알고리즘 프로그래밍  
@@ -189,6 +189,7 @@ self.vel_pub.publish(self.rotary_vel)
 동적 장애물은 인도, 즉 사이드에서 출현해 사라지기 때문에 꼭 정지할 필요 없이 장애물을 미리 감지하고 지나갈 때까지 서행한다면 충돌할 일이 없을 것이다. 
 
 만약 장애물이 움직이지 않는다면 다음 단계로 넘어간다.
+<img src="https://github.com/khw274/VEAC-2022/assets/125671828/4491a711-32d1-4628-8a2d-efa8006b7f30" width="800" height="500"/> 
 
 #### (정적 장애물 미션)
 차량과 장애물의 거리가 0.15 미만이라면 장애물이 차선에 침입했다고 생각하고 지역 경로 내 장애물 리스트에 장애물 좌표를 저장한다.   
@@ -286,6 +287,8 @@ elif self.static_mission:
   self.vel_pub.publish(dynamic_vel)
   self.selected_pub.publish(selected_lane)
 ```
+<img src="https://github.com/khw274/VEAC-2022/assets/125671828/1b710001-5c9c-4c40-b9aa-2169118de734" width="800" height="500"/> 
+
 #### (라바콘 장애물 미션)
 
 
