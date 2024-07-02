@@ -294,6 +294,7 @@ elif self.static_mission:
 라바콘 장애물 미션을 수행하기 위해 우선 주변 장애물 리스트(around_obj_list)를 구성한다.
 
 pcd_list에서 가져온 라이다 센서를 통해 감지한 주변 장애물 좌표와 차량 중심([0, 0]) 간의 거리를 계산한다. 그 거리가 1.3 미만이라면 주변에 있다고 인지하게 해 주변 장애물 리스트(around_obj_list)에 넣어준다.   
+
 따라서 차량 주변 1.3 미터 이내에 있는 장애물들만 리스트에 포함된다.
 
 라바콘 장애물은 양쪽으로 마치 하나의 길처럼 구성되어 있다. 이를 통과하기 위해선 우측, 좌측 장애물을 구분하는 작업이 필요하다.   
@@ -344,6 +345,58 @@ curr_right, curr_left = [0, 0], [0, 0]  # ego와 가장 가까운 좌우 장애�
 
         self.obj_width = self.get_dst(curr_left, curr_right)  # 좌우 장애물 간격 계산
         print(self.obj_width)
+```
+라바콘 미션에 필요한 좌표값들을 모두 구하였다면 라바콘 회피 알고리즘을 구성한다.
+
+라바콘 미션이 활성화 되었을 시 우측 장애물 리스트에서 좌표를 가져오고 현재 차량의 위치와의 거리를 계산한다.
+
+그 거리의 최솟값을 구해 저장하고 최소 거리일 때의 라바콘 좌표를 저장한다.  
+미리 설정한 파라미터 lfd를 조절해가며 최소 거리 오차를 제어한다. 
+
+우측 가장 가까운 라바콘(cur_cone)을 기준으로 왼쪽으로 트랙 폭의 절반 만큼 오프셋하여 조향점을 선정한다. 여기서 cur_cone[1] + offset은 cur_cone의 y 좌표에서 트랙의 절반 폭만큼 이동한 위치를 나타낸다.  
+```python
+str_p = [cur_cone[0], cur_cone[1] + offset]
+```
+
+해당 좌표를 이용해 조향각을 계산하고 라디안 값을 각도로 변환해준다.
+```python
+if self.cone_mission:
+            print('콘 미션 중 : {}'.format(self.obj_width))
+            min_dst = 999
+            cur_cone = [0, 0]
+            for cone in right_objs:
+                dst = self.get_dst(cone, self.ego_pos)
+                if min_dst > dst - lfd and dst - lfd > 0:
+                    min_dst = dst
+                    cur_cone = cone  # lfd 만큼 앞에 있는 오른쪽 콘 중 가장 가까운 콘 검출
+
+            str_p = [cur_cone[0], cur_cone[1] + offset]  # 오른쪽 가장 가까운 콘 기준 왼쪽으로 트랙 폭의 반만큼 오프셋하여 조향점 선정
+            str_rad = self.get_str_angle(str_p)  # 조향 각도 계산
+            str_deg = math.degrees(str_rad)  # 라디안을 각도로 변환
+```
+여기서 조향각을 구하는 함수는 다음과 같다.
+```python
+def get_str_angle(self, steer_p, wheel_base=0.39):
+    # 조향점(steer_p)의 x, y 좌표를 각각 steer_y, steer_x에 저장합니다.
+    steer_x = steer_p[1]  # 조향점의 y 좌표 (steer_p의 두 번째 요소)
+    steer_y = steer_p[0]  # 조향점의 x 좌표 (steer_p의 첫 번째 요소)
+
+    # steer_x가 0인 경우(조향점이 차량 바로 앞에 있는 경우), r을 매우 큰 값으로 설정합니다.
+    # 이는 나누기 0을 방지하기 위함입니다.
+    if steer_x == 0:
+        r = 9999999999  # 매우 큰 값으로 설정하여 나누기 0을 방지
+    else:
+        # steer_x가 0이 아닌 경우, 조향 반경(r)을 계산합니다.
+        # r은 조향점의 y 좌표를 사용하여 계산됩니다.
+        r = -(steer_x / 2) - (steer_y ** 2) / (2 * steer_x)
+
+    # 조향 각도(라디안)를 계산합니다.
+    # 조향 각도는 휠베이스를 조향 반경으로 나눈 값입니다.
+    str_rad = wheel_base / r
+
+    # 계산된 조향 각도를 반환합니다.
+    return str_rad
+
 ```
 <img src="https://github.com/khw274/VEAC-2022/assets/125671828/9db8175e-103d-44df-92c5-1f5c8e124628" width="800" height="500"/> 
 
