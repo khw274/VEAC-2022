@@ -266,7 +266,8 @@ self.obj_width = self.get_dst(curr_left, curr_right)  //  curr_left와 curr_righ
         self.static_mission = True
         self.static_obj_mean = self.get_mean(local_obstacle_list)  # 회피 여부를 결정하기 위해 정지해있을때의 장애물 위치 기억
 ```
-하지만 회피한 차선에도 정적 장애물이 존재할 수 있다. 따라서 최대한 빠르게 원래 주행 차선으로 복귀할 수 있어야 한다.  
+하지만 회피한 차선에도 정적 장애물이 존재할 수 있기 때문에 최대한 빠르게 원래 주행 차선으로 복귀할 수 있어야 한다.  
+
 따라서 차량의 현재 좌표와 앞서 저장해둔 기억한 장애물 좌표의 거리가 멀어진다면 정적 미션을 종료시켜 차선을 복귀시킨다. 
 ```python
 elif self.static_mission:
@@ -290,7 +291,44 @@ elif self.static_mission:
 <img src="https://github.com/khw274/VEAC-2022/assets/125671828/1b710001-5c9c-4c40-b9aa-2169118de734" width="800" height="500"/> 
 
 #### (라바콘 장애물 미션)
+라바콘 장애물 미션을 수행하기 위해 우선 주변 장애물 리스트(around_obj_list)를 구성한다.
 
+pcd_list에서 가져온 라이다 센서를 통해 감지한 주변 장애물 좌표와 차량 중심([0, 0]) 간의 거리를 계산한다. 그 거리가 1.3 미만이라면 주변에 있다고 인지하게 해 주변 장애물 리스트(around_obj_list)에 넣어준다.
+
+따라서 차량 주변 1.3 미터 이내에 있는 장애물들만 리스트에 포함된다.
+
+라바콘 장애물은 양쪽으로 마치 하나의 길처럼 구성되어 있다. 이를 통과하기 위해선 우측, 좌측 장애물을 구분하는 작업이 필요하다.
+
+좌측 장애물 리스트(left_objs = [])와 우측 장애물 리스트(right_objs = [])를 만들어주고 주변 장애물 좌표를 불러온다.
+
+라이더 좌표계 상에서 x축이 차량의 진행 방향, y축이 차량의 좌우 방향이다.
+
+따라서 주변 장애물 리스트에서 y축 좌표를 뽑아내고 이 좌표가 양수일 시 좌측 장애물 리스트, 음수일시 우측 장애물 리스트로 좌표 값을 넣어준다.
+```python
+def callback(self, msg):
+    lfd = 0.5  # look forward distance (전방 거리)
+    track_width = 1.2  # 트랙의 폭
+    offset = track_width / 2  # 트랙의 폭의 절반을 오프셋으로 설정
+
+    if self.is_status and self.is_local_path:  # 데이터가 모두 콜백된 상태에서 알고리즘을 실행합니다.
+        around_obj_list = []
+        for i in msg.points:
+            dis = self.get_dst([i.x, i.y], [0, 0])
+            if dis < 1.3:
+                around_obj_list.append([i.x, i.y])  # ego 주변의 장애물만 검출
+
+        left_objs = []
+        right_objs = []
+        for i in around_obj_list:  # 라이더 좌표계 y축을 기준으로 좌우 구분
+            if i[1] > 0:
+                left_objs.append(i)  # y 좌표가 양수인 경우 좌측 장애물
+            else:
+                right_objs.append(i)  # y 좌표가 음수인 경우 우측 장애물
+```
+
+
+
+<img src="https://github.com/khw274/VEAC-2022/assets/125671828/9db8175e-103d-44df-92c5-1f5c8e124628" width="800" height="500"/> 
 
 ## 최종
 해당 대회를 준비하면서 가장 중요하다고 느낀 부분은 수많은 시나리오를 테스트하며 파라미터 값을 조정하는 것이라고 생각한다. 
