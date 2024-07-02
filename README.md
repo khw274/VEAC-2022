@@ -354,6 +354,8 @@ curr_right, curr_left = [0, 0], [0, 0]  # ego와 가장 가까운 좌우 장애�
 미리 설정한 파라미터 lfd를 조절해가며 최소 거리 오차를 제어한다. 
 
 우측 가장 가까운 라바콘(cur_cone)을 기준으로 왼쪽으로 트랙 폭의 절반 만큼 오프셋하여 조향점을 선정한다. 여기서 cur_cone[1] + offset은 cur_cone의 y 좌표에서 트랙의 절반 폭만큼 이동한 위치를 나타낸다.  
+
+여기서 offset은 트랙의 폭(track_width)을 기준으로 중앙에서부터 좌우로 얼마나 떨어져 있는지를 계산하기 위해 사용된다.
 ```python
 str_p = [cur_cone[0], cur_cone[1] + offset]
 ```
