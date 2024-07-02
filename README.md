@@ -396,7 +396,16 @@ def get_str_angle(self, steer_p, wheel_base=0.39):
 
     # 계산된 조향 각도를 반환합니다.
     return str_rad
+```
+만약 좌, 우측 장애물 간 거리가 0.7 미만이라면 라바콘 장애물이 아니라고 인식하고 미션을 종료시킨다.
 
+최종적으로 계산한 조향각과 속도를 publish한다.
+```python
+if self.obj_width < 0.7:
+              self.cone_mission = False  # cone mission 종료
+
+          self.str_pub.publish(str_deg)  # 조향 각도 publish
+          self.vel_pub.publish(Float64(1.5))  # 속도 publish
 ```
 <img src="https://github.com/khw274/VEAC-2022/assets/125671828/9db8175e-103d-44df-92c5-1f5c8e124628" width="800" height="500"/> 
 
