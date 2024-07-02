@@ -293,17 +293,13 @@ elif self.static_mission:
 #### (라바콘 장애물 미션)
 라바콘 장애물 미션을 수행하기 위해 우선 주변 장애물 리스트(around_obj_list)를 구성한다.
 
-pcd_list에서 가져온 라이다 센서를 통해 감지한 주변 장애물 좌표와 차량 중심([0, 0]) 간의 거리를 계산한다. 그 거리가 1.3 미만이라면 주변에 있다고 인지하게 해 주변 장애물 리스트(around_obj_list)에 넣어준다.
+pcd_list에서 가져온 라이다 센서를 통해 감지한 주변 장애물 좌표와 차량 중심([0, 0]) 간의 거리를 계산한다. 그 거리가 1.3 미만이라면 주변에 있다고 인지하게 해 주변 장애물 리스트(around_obj_list)에 넣어준다. 따라서 차량 주변 1.3 미터 이내에 있는 장애물들만 리스트에 포함된다.
 
-따라서 차량 주변 1.3 미터 이내에 있는 장애물들만 리스트에 포함된다.
+라바콘 장애물은 양쪽으로 마치 하나의 길처럼 구성되어 있다. 이를 통과하기 위해선 우측, 좌측 장애물을 구분하는 작업이 필요하다.   
 
-라바콘 장애물은 양쪽으로 마치 하나의 길처럼 구성되어 있다. 이를 통과하기 위해선 우측, 좌측 장애물을 구분하는 작업이 필요하다.
-
-좌측 장애물 리스트(left_objs = [])와 우측 장애물 리스트(right_objs = [])를 만들어주고 주변 장애물 좌표를 불러온다.
-
-라이더 좌표계 상에서 x축이 차량의 진행 방향, y축이 차량의 좌우 방향이다.
-
-따라서 주변 장애물 리스트에서 y축 좌표를 뽑아내고 이 좌표가 양수일 시 좌측 장애물 리스트, 음수일시 우측 장애물 리스트로 좌표 값을 넣어준다.
+좌측 장애물 리스트(left_objs = [])와 우측 장애물 리스트(right_objs = [])를 만들어주고 주변 장애물 좌표를 불러온다.  
+라이더 좌표계 상에서 x축이 차량의 진행 방향, y축이 차량의 좌우 방향이다.   
+구해야 하는 좌표는 좌우측 장애물이기 때문에 주변 장애물 리스트에서 y축 좌표를 뽑아내고 이 좌표가 양수일 시 좌측 장애물 리스트, 음수일시 우측 장애물 리스트로 좌표 값을 넣어준다.
 ```python
 def callback(self, msg):
     lfd = 0.5  # look forward distance (전방 거리)
@@ -325,9 +321,29 @@ def callback(self, msg):
             else:
                 right_objs.append(i)  # y 좌표가 음수인 경우 우측 장애물
 ```
+다음으로 차량과 가장 가까운 좌, 우측 장애물 리스트를 생성하고 초기화한다.  
+좌우측 장애물 리스트 각각의 좌표를 불러오고 차량과의 거리를 측정한다. 최소값을 구하는 IF문을 통해 리스트에 저장한다.
 
+구한 좌, 우측 가장 가까운 장애물 좌표 간 거리를 계산해 저장한다.
+```python
+curr_right, curr_left = [0, 0], [0, 0]  # ego와 가장 가까운 좌우 장애물 초기화
+        min_dst = 999
+        for obj in left_objs:
+            dst = self.get_dst(obj, self.ego_pos)
+            if min_dst > dst:
+                min_dst = dst
+                curr_left = obj  # 가장 가까운 좌측 장애물 업데이트
 
+        min_dst = 999
+        for obj in right_objs:
+            dst = self.get_dst(obj, self.ego_pos)
+            if min_dst > dst:
+                min_dst = dst
+                curr_right = obj  # 가장 가까운 우측 장애물 업데이트
 
+        self.obj_width = self.get_dst(curr_left, curr_right)  # 좌우 장애물 간격 계산
+        print(self.obj_width)
+```
 <img src="https://github.com/khw274/VEAC-2022/assets/125671828/9db8175e-103d-44df-92c5-1f5c8e124628" width="800" height="500"/> 
 
 ## 최종
