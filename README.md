@@ -376,7 +376,6 @@ if self.cone_mission:
 ```
 여기서 조향각을 구하는 함수는 다음과 같다.
 
-좌표를 교차해서 넣는 이유는 차량의 좌표계와 일반적인 평면 좌표계를 일치시키기 위해서입니다. 평면 좌표계에서는 x축이 좌우를, y축이 상하(전후)를 나타내지만, 차량의 좌표계에서는 x축이 전후를, y축이 좌우를 나타내기 때문
 ```python
 def get_str_angle(self, steer_p, wheel_base=0.39):
     # 조향점(steer_p)의 x, y 좌표를 각각 steer_y, steer_x에 저장합니다.
