@@ -422,7 +422,9 @@ r = -(steer_x / 2) - (steer_y ** 2) / (2 * steer_x)
 
 조향 반경 r을 구한 후 
 차량의 앞 차축과 뒷 차축 사이 거리 wheel_base 에 나누어줌으로서 조향각을 계산한다.  
-```str_rad = wheel_base / r```  
+```python
+str_rad = wheel_base / r
+```  
 
 
 만약 좌, 우측 장애물 간 거리가 0.7 미만이라면 라바콘 장애물이 아니라고 인식하고 미션을 종료시킨다.
