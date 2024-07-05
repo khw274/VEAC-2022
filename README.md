@@ -35,7 +35,18 @@ path_maker 노드를 실행시켜 주어진 경로 폴더에서 파일로 저장
                                      반대로 짧게 설정하면 경로 추종 성능은 증가하지만 과도하게 짧을 시 경로를 초과하여 진동 현상을 일으킬 수 있다.
                                      
 따라서 전방 주시 거리 파라미터 값을 최소, 최대로 나누어 조절하고 테스트함으로써 최상의 주행을 할 수 있도록 했다.
-
+```python
+class purePursuit :
+    def __init__(self):
+        self.forward_point=Point()  # 추종할 지점 (Forward Point) - 경로상의 목표 지점
+        self.current_postion=Point()  # 현재 위치 (Current Position) - 차량의 현재 위치
+        self.is_look_forward_point=False  # 목표 지점이 있는지 여부를 나타내는 플래그 (Boolean)
+        self.lfd=1  # 전방 주시 거리 (Look Forward Distance) - 초기값 1
+        self.min_lfd= 0.2  # 최소 전방 주시 거리 (Minimum Look Forward Distance) - 최소값 0.2
+        self.max_lfd= 1  # 최대 전방 주시 거리 (Maximum Look Forward Distance) - 최대값 1
+        self.vehicle_length=0.39  # 차량의 길이 (Vehicle Length) - 0.39m
+        self.steering=0  # 조향 각도 (Steering Angle) - 초기값 0
+```
 ### 미션 코드 설계
 #### (속도 조정 방법)
 wecar planner(메인 노드)에서 계획한 현재 속도, 각 미션을 수행할 때 필요한 적정 속도 모두 다르기 때문에 때에 따라 속도값을 조절하는 것은 필수적이다.
@@ -49,18 +60,6 @@ wecar planner(메인 노드)에서 계획한 현재 속도, 각 미션을 수행
   특정 속도로 주행하고 싶을 땐 나머지 속도 값을 999로 초기화하고 특정 속도를 그보다 작은 값으로 설정해 min_vel(가장 작은 속도 값)을 불러와 속도를 조정하였다.
 
 이렇게 적합한 속도를 저장하는 min_vel을 차량 모터의 RPM으로 변환하여 motor_msg에 저장하는 과정을 걸쳐 차량의 속도를 최종적으로 제어할 수 있었다.  
-```python
-class purePursuit :
-    def __init__(self):
-        self.forward_point=Point()  # 추종할 지점 (Forward Point) - 경로상의 목표 지점
-        self.current_postion=Point()  # 현재 위치 (Current Position) - 차량의 현재 위치
-        self.is_look_forward_point=False  # 목표 지점이 있는지 여부를 나타내는 플래그 (Boolean)
-        self.lfd=1  # 전방 주시 거리 (Look Forward Distance) - 초기값 1
-        self.min_lfd= 0.2  # 최소 전방 주시 거리 (Minimum Look Forward Distance) - 최소값 0.2
-        self.max_lfd= 1  # 최대 전방 주시 거리 (Maximum Look Forward Distance) - 최대값 1
-        self.vehicle_length=0.39  # 차량의 길이 (Vehicle Length) - 0.39m
-        self.steering=0  # 조향 각도 (Steering Angle) - 초기값 0
-```
 
 ```python
  # 속도 Filtering
