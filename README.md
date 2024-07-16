@@ -51,6 +51,13 @@ class purePursuit :
         self.steering=0  # 조향 각도 (Steering Angle) - 초기값 0
 ```
 ### 미션 코드 설계
+#### 전체적인 구조
+![image](https://github.com/user-attachments/assets/01f2f8a5-18c7-4cc3-a165-798939230b38)
+전체적인 프로그램의 구조는 사진과 같다.
+
+MORAI SIM에서 받은 센서 데이터들을 Python 파일로 만들어 토픽을 뿌려주면, 필요한 미션 알고리즘 노드에서 받아와 쓸 수 있도록 한다.
+
+다음에 설명하겠지만 속도 최솟값을 wecar_planner를 통해 MORAI SIM으로 전송해 미션에 알맞은 속도로 주행할 수 있도록 하는 원리이다.
 #### (속도 조정 방법)
 wecar planner(메인 노드)에서 계획한 현재 속도, 각 미션을 수행할 때 필요한 적정 속도 모두 다르기 때문에 때에 따라 속도값을 조절하는 것은 필수적이다.
 
