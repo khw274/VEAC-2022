@@ -53,6 +53,7 @@ class purePursuit :
 ### 미션 코드 설계
 #### 전체적인 구조
 ![image](https://github.com/user-attachments/assets/01f2f8a5-18c7-4cc3-a165-798939230b38)
+
 전체적인 프로그램의 구조는 사진과 같다.
 
 MORAI SIM에서 받은 센서 데이터들을 Python 파일로 만들어 토픽을 뿌려주면, 필요한 미션 알고리즘 노드에서 받아와 쓸 수 있도록 한다.
