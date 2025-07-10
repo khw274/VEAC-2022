@@ -16,7 +16,7 @@ class test:
     def __init__(self):
         rospy.init_node('path_maker', anonymous=True)  # 'path_maker'라는 이름의 ROS 노드를 초기화합니다.
 
-        arg = rospy.myargv(argv=sys.argv)
+        arg = rospy.myargv(argv=sys.argv)  # ROS에서 명령줄 인자 중 사용자 정의 인자만 추려서 리스트로 반환하는 함수
         self.path_folder_name = arg[1]  # 첫 번째 인자는 경로 폴더 이름입니다.
         self.make_path_name = arg[2]   # 두 번째 인자는 생성할 경로 이름입니다.
 
